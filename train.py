@@ -12,7 +12,7 @@ import numpy as np
 
 
 
-
+cv2.cuda.setDevice(0)
 
 def findEncodings(imagesList):
     encode_list1=[]
@@ -29,13 +29,14 @@ def findEncodings(imagesList):
                 
                 image = cv2.imread(img)
                 crop_img = image[facial_area[1]: facial_area[3], facial_area[0]: facial_area[2]]
-                
+                crop_img = np.ascontiguousarray(crop_img[:, :, ::-1])
                 
                 encode=face_recognition.face_encodings(crop_img)[0]
                 encode_list1.append(encode)
 
 
     return encode_list1
+
 
 
 

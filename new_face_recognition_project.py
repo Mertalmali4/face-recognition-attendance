@@ -7,9 +7,9 @@ import os
 import pickle
 import xlsxwriter
 import datetime
+import tensorflow
 
-
-
+cv2.cuda.setDevice(0)
 video_capture = cv2.VideoCapture(0)
 
 x = datetime.datetime.now()
@@ -65,6 +65,7 @@ while True:
                 facial_area_location.append((facial_area[3],facial_area[0], facial_area[1],facial_area[2]))
                 #3012
                 crop_img = frame[facial_area[1]: facial_area[3], facial_area[0]: facial_area[2]]
+                crop_img = np.ascontiguousarray(crop_img[:, :, ::-1])
 
         else:
             crop_img=frame    
@@ -122,7 +123,16 @@ while True:
         # Draw a label with a name below the face
         cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
         #font = cv2.FONT_HERSHEY_DUPLEX
-        cv2.putText(frame, name, (left-180, bottom-8), font, 1.0, (255, 255, 255), 1)
+
+
+        font_scale = 0.8  # İstediğiniz boyuta göre ayarlayın
+        font_thickness = 1  # İstediğiniz kalınlığa göre ayarlayın
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        text_size = cv2.getTextSize(name, font, font_scale, font_thickness)[0]
+        text_x = left + (right - left - text_size[0]) // 2  # Metni çerçevenin ortasına hizalamak için
+        text_y = bottom - 8
+        cv2.putText(frame, name, (text_x, text_y), font, font_scale, (255, 255, 255), font_thickness)
+        #cv2.putText(frame, name, (left-180, bottom-8), font, 1.0, (255, 255, 255), 1)
         
     # Display the resulting image
     cv2.imshow('Video', frame)

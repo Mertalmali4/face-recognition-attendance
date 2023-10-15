@@ -12,6 +12,7 @@ import os
 import numpy as np
 
 #window
+cv2.cuda.setDevice(0)
 tkWindow = Tk()  
 tkWindow.geometry('300x350')  
 tkWindow.title('Face Recognition Add Face')
@@ -59,7 +60,9 @@ def function1():
         
             
         if 1==len(resp):
-            cv2.imshow("mert",frame)
+            if (os.path.exists("dataset"))==False:
+                file=os.mkdir("dataset")
+            cv2.imshow("Photo",frame)
             cv2.imwrite("dataset/" + str(user)+".jpg",frame)
             pymsgbox.alert("Your Face Added Successfully")
         else:
